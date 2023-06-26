@@ -1,8 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-
-const { game, newGame, showScore } = require('../game'); // Import Object
+const { game, newGame, showScore, addTurn, lightOn} = require('../game'); // Import Object
 
 beforeAll(() => {
     let fs = require('fs'); // install library
@@ -39,16 +38,46 @@ describe('Testing "newGame" function', () => {
         game.currentGame = ["button1", "button2", "button3", "button4"];
         newGame();
     })
+
+    // test('Check if newGame() resets "currentGame" values', () => {
+    //     expect(game.currentGame).toStrictEqual([]); // Or this way
+    // })
+
+    test('Add one move to the "currentGame" array', () => {
+        expect(game.currentGame.length).toBe(1);
+    })
+
     test('Check if newGame() resets "score" values', () => {
         expect(game.score).toEqual(0);
     })
     test('Check if newGame() resets "playerMoves" values', () => {
         expect(game.playerMoves.length).toBe(0); // This way
     })
-    test('Check if newGame() resets "currentGame" values', () => {
-        expect(game.currentGame).toStrictEqual([]); // Or this way
-    })
     test('Check if score in DOM has been updated', () => {
         expect(document.getElementById('score').innerText).toEqual(0); // Or this way
+    })
+})
+
+describe ('Gameplay functionality', () => {
+    beforeEach(()=> {
+        game.score = 0;
+        game.playerMoves = [];
+        game.currentGame = [];
+        addTurn();
+    })
+    afterEach(()=> {
+        game.score = 0;
+        game.playerMoves = [];
+        game.currentGame = [];
+    })
+    
+    test('addTurn check for 2 elements', () => {
+        addTurn();
+        expect(game.currentGame.length).toEqual(2);
+    })
+    test('Add light class', () => {
+        let button = document.getElementById(game.currentGame[0]);
+        lightOn(game.currentGame[0]);
+        expect(button.classList).toContain('light');
     })
 })

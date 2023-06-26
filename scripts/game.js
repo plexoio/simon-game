@@ -10,9 +10,22 @@ function newGame () {
     game.playerMoves = [];
     game.currentGame = [];
     showScore();
+    addTurn();
 }
 
+function addTurn () {
+    game.playerMoves = [];
+    game.currentGame.push(game.choices[Math.floor(Math.random() * 4)]); // result of expression is the Index
+    // showTurns();
+}
 function showScore () {
     document.getElementById('score').innerText = game.score;
 }
-module.exports = {game, newGame, showScore}; // Exports Object | Add curly braces if more than one Object, Function, etc.
+
+function lightOn (curr) {
+    document.getElementById(curr).classList.add('light');
+    setTimeout(() => {
+        document.getElementById(curr).classList.remove('light');
+    }, 400);
+}
+module.exports = {game, newGame, showScore, addTurn, lightOn}; // Exports Object | Add curly braces if more than one Object, Function, etc.
