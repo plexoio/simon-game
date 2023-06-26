@@ -1,8 +1,8 @@
 /**
  * @jest-environment jsdom
  */
-const exp = require('constants');
-const { game, newGame, showScore, addTurn, lightOn, showTurns} = require('../game'); // Import Object
+
+const { game, newGame, showScore, addTurn, lightOn, showTurns } = require('../game'); // Import Object
 
 beforeAll(() => {
     let fs = require('fs'); // install library
@@ -69,19 +69,21 @@ describe('Testing "newGame" function', () => {
     })
 })
 
-describe ('Gameplay functionality', () => {
-    beforeEach(()=> {
+// Test suite 3 FUNCTION
+
+describe('Gameplay functionality', () => {
+    beforeEach(() => {
         game.score = 0;
         game.playerMoves = [];
         game.currentGame = [];
         addTurn();
     })
-    afterEach(()=> {
+    afterEach(() => {
         game.score = 0;
         game.playerMoves = [];
         game.currentGame = [];
     })
-    
+
     test('addTurn check for 2 elements', () => {
         addTurn();
         expect(game.currentGame.length).toEqual(2);
@@ -95,5 +97,12 @@ describe ('Gameplay functionality', () => {
         newGame();
         showTurns();
         expect(game.turnNumber).toBe(0);
+    })
+
+    test('Expect data-listener to be "true"', () => {
+        const elements = document.getElementsByClassName('circle');
+        for (let element of elements) {
+            expect(element.getAttribute('data-listener')).toBe("true");
+        }
     })
 })
