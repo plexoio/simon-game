@@ -9,7 +9,6 @@ let game = {
 function newGame() {
     game.score = 0;
     game.currentGame = [];
-    game.turnNumber = 0;
     game.playerMoves = [];
 
     for (let circle of document.getElementsByClassName('circle')) {
@@ -17,24 +16,24 @@ function newGame() {
             circle.addEventListener('click', (e) => {
                 let move = e.target.getAttribute('id');
                 lightOn(move);
-                game.playerMoves.push(move); // to an array
-                // playerTurn();
+                game.playerMoves.push(move); // to the array
+                playerMove();
             })
             circle.setAttribute('data-listener', 'true');
         }
     }
     
-    showScore();
+    addScore();
     addTurn();
 }
 
 function addTurn() {
     game.playerMoves = [];
     game.currentGame.push(game.choices[Math.floor(Math.random() * 4)]); // result of expression is the Index
-    showTurns();
+    showCurrentGame();
 }
 
-function showScore() {
+function addScore() {
     document.getElementById('score').innerText = game.score;
 }
 
@@ -57,9 +56,12 @@ function lightOn(curr) {
  * Defines a setInterval function that executes a callback function repeatedly at a specified interval 
  * of 800 milliseconds. The interval is stored in the turns variable, which allows 
  * the interval to be cleared later.'
+ * 
+ * => THIS FUNCTION WILL LIGHT UP THE GAME PLAY INCREMENT (DIFFICULTY)
  */
 
-function showTurns() {
+function showCurrentGame() {
+    game.turnNumber = 0;
     let turns = setInterval(() => {
         lightOn(game.currentGame[game.turnNumber]);
         game.turnNumber++;
@@ -69,4 +71,16 @@ function showTurns() {
 
     }, 800);
 }
-module.exports = { game, newGame, showScore, addTurn, lightOn, showTurns }; // Exports Object | Add curly braces if more than one Object, Function, etc.
+
+function playerMove() {
+    let getSameIndexNumber = game.playerMoves.length - 1; // get last element - 2 , - 3 possible
+    if (game.currentGame[getSameIndexNumber] === game.playerMoves[getSameIndexNumber]) {
+        if (game.currentGame.length == game.playerMoves.length){
+            game.score++;
+            addScore();
+            addTurn();
+        }
+    }
+}
+
+module.exports = { game, newGame, addScore, addTurn, lightOn, showCurrentGame, playerMove }; // Exports Object | Add curly braces if more than one Object, Function, etc.

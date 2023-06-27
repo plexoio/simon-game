@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-const { game, newGame, showScore, addTurn, lightOn, showTurns } = require('../game'); // Import Object
+const { game, newGame, addScore, addTurn, lightOn, showCurrentGame, playerMove } = require('../game'); // Import Object
 
 beforeAll(() => {
     let fs = require('fs'); // install library
@@ -95,7 +95,7 @@ describe('Gameplay functionality', () => {
     })
     test('Update game.turnNumber', () => {
         newGame();
-        showTurns();
+        showCurrentGame();
         expect(game.turnNumber).toBe(0);
     })
 
@@ -104,5 +104,11 @@ describe('Gameplay functionality', () => {
         for (let element of elements) {
             expect(element.getAttribute('data-listener')).toBe("true");
         }
+    })
+    
+    test('Check score increment if correct answer', () => {
+        game.playerMoves.push(game.currentGame[0]);
+        playerMove();
+        expect(game.score).toBe(1);
     })
 })
