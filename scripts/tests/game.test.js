@@ -4,6 +4,8 @@
 
 const { game, newGame, addScore, addTurn, lightOn, showCurrentGame, playerMove } = require('../game'); // Import Object
 
+jest.spyOn(window, 'alert').mockImplementation(() => { })
+
 beforeAll(() => {
     let fs = require('fs'); // install library
     let myDOM = fs.readFileSync('index.html', 'utf-8');
@@ -12,29 +14,46 @@ beforeAll(() => {
     document.close();
 });
 
-// Test suite 1 OBJECT
-describe('Test Game Object: ', () => {
+// Test suite 1 game{} Object
+describe('Check for the keys & values of the game {} object', () => {
     test('Check for Key "game" in Object', () => {
         expect('score' in game).toBe(true); // Test imported object
     });
+
     test('Check for Key "currentGame" in Object', () => {
         expect('currentGame' in game).toBe(true); // Test imported object
     });
+
     test('Check for Key "playerMoves" in Object', () => {
         expect('playerMoves' in game).toBe(true); // Test imported object
     });
+
     test('Check for Key "choices" in Object', () => {
         expect('choices' in game).toBe(true); // Test imported object
     });
+
     test('Check for Values in "choices" key', () => {
         expect(game.choices).toStrictEqual(["button1", "button2", "button3", "button4"]); // Test imported object
     });
+
     test('Check for "game.turnNumber"', () => {
         expect('turnNumber' in game).toBe(true); // Test imported object
     });
+
+    test('Check for "game.lastButton"', () => {
+        expect('lastButton' in game).toBe(true); // Test imported object
+    });
+
+    test('Check for "game.computerInProgress"', () => {
+        expect('computerInProgress' in game).toBe(true); // Test imported object
+    });
+
+    test('Check for "game.computerInProgress" to be "false"', () => {
+        expect(game.computerInProgress).toEqual(false); // Test imported object
+    });
 });
 
-// Test suite 2 FUNCTION
+// Test suite 2 newGame()
 describe('Testing "newGame" function', () => {
     beforeAll(() => {
         game.score = 42;
@@ -69,7 +88,7 @@ describe('Testing "newGame" function', () => {
     })
 })
 
-// Test suite 3 FUNCTION
+// Test suite 3 GAMEPLAY
 
 describe('Gameplay functionality', () => {
     beforeEach(() => {
@@ -105,10 +124,27 @@ describe('Gameplay functionality', () => {
             expect(element.getAttribute('data-listener')).toBe("true");
         }
     })
-    
+
     test('Check score increment if correct answer', () => {
         game.playerMoves.push(game.currentGame[0]);
         playerMove();
         expect(game.score).toBe(1);
     })
+
+    test('Check for an Alert if wrong move', () => {
+        game.currentGame.push('Wrong');
+        game.playerMoves.push('Wrong');
+        playerMove();
+        expect(window.alert).toBeCalledWith('Wrong Move!');
+    })
+
+    test('Check for "game.computerInProgress" to "true"', () => {
+        expect(game.computerInProgress).toBe(true); // Test imported object
+    });
+
+    test('Check for "game.lastButton" to ""', () => {
+        game.lastButton = "";
+        document.getElementById('button2').click();
+        expect(game.lastButton).toBe(""); // Test imported object
+    });
 })

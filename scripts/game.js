@@ -3,6 +3,8 @@ let game = {
     currentGame: [],
     turnNumber: 0,
     playerMoves: [],
+    lastButton: "",
+    computerInProgress: false,
     choices: ["button1", "button2", "button3", "button4"],
 }
 
@@ -14,15 +16,18 @@ function newGame() {
     for (let circle of document.getElementsByClassName('circle')) {
         if (circle.getAttribute('data-listener') != 'true') {
             circle.addEventListener('click', (e) => {
-                let move = e.target.getAttribute('id');
-                lightOn(move);
-                game.playerMoves.push(move); // to the array
-                playerMove();
-            })
+                if (game.currentGame.length > 0 && !game.computerInProgress) {
+                    let move = e.target.getAttribute('id');
+                    game.lastButton = move;
+                    lightOn(move);
+                    game.playerMoves.push(move); // to the array
+                    playerMove();
+                };
+            });
             circle.setAttribute('data-listener', 'true');
-        }
-    }
-    
+        };
+    };
+
     addScore();
     addTurn();
 }
@@ -58,15 +63,18 @@ function lightOn(curr) {
  * the interval to be cleared later.'
  * 
  * => THIS FUNCTION WILL LIGHT UP THE GAME PLAY INCREMENT (DIFFICULTY)
+ * => COMPUTER IN PROGRESS
  */
 
 function showCurrentGame() {
+    game.computerInProgress = true;
     game.turnNumber = 0;
     let turns = setInterval(() => {
         lightOn(game.currentGame[game.turnNumber]);
         game.turnNumber++;
         if (game.turnNumber >= game.currentGame.length) {
             clearInterval(turns);
+            game.computerInProgress = false;
         }
 
     }, 800);
@@ -75,11 +83,14 @@ function showCurrentGame() {
 function playerMove() {
     let getSameIndexNumber = game.playerMoves.length - 1; // get last element - 2 , - 3 possible
     if (game.currentGame[getSameIndexNumber] === game.playerMoves[getSameIndexNumber]) {
-        if (game.currentGame.length == game.playerMoves.length){
+        if (game.currentGame.length == game.playerMoves.length) {
             game.score++;
             addScore();
             addTurn();
         }
+    } else {
+        alert('Wrong Move!')
+        newGame();
     }
 }
 
