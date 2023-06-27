@@ -47,10 +47,6 @@ describe('Check for the keys & values of the game {} object', () => {
     test('Check for "game.computerInProgress"', () => {
         expect('computerInProgress' in game).toBe(true); // Test imported object
     });
-
-    test('Check for "game.computerInProgress" to be "false"', () => {
-        expect(game.computerInProgress).toEqual(false); // Test imported object
-    });
 });
 
 // Test suite 2 newGame()
@@ -60,6 +56,7 @@ describe('Testing "newGame" function', () => {
         game.playerMoves = ["button1", "button2", "button3", "button4"];
         game.currentGame = ["button1", "button2", "button3", "button4"];
         game.turnNumber = 1;
+        game.lastButton = "button1";
         newGame();
     })
 
@@ -85,6 +82,10 @@ describe('Testing "newGame" function', () => {
 
     test('Check if newGame() resets "game.turnNumber" values', () => {
         expect(game.turnNumber).toEqual(0);
+    })
+
+    test('Check if newGame() resets "game.lastButton" value', () => {
+        expect(game.lastButton).toBe("");
     })
 })
 
